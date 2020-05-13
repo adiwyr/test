@@ -1,0 +1,217 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+   <title>LUSTAT Statistik Luzern</title>
+   <link type='text/css' rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro'/>
+
+
+
+   <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'></script>
+   <script type='text/javascript'>
+$(document).ready(function() {
+var json = {
+   chart: {
+      renderTo: 'hcbartest9',
+      borderColor: '#006EAC',
+      borderWidth: 0,
+      type: 'line',
+      inverted: false,
+      marginLeft: 100,
+      marginRight: 50,
+      spacingLeft: 100,
+      spacingRight: 50,
+      height: 552,
+      spacingBottom: 132,
+      events: {
+         load: function () {
+            this.renderer.label('Das ist die erste Fussnote,<br>und das die zweite Zeile',95,470)
+               .css({
+                   fontSize: '12px'
+               })
+               .add();
+         },
+      },
+   },
+   plotOptions: {
+      series: {
+         marker: {
+            enabled: true,
+         },
+         dataLabels: {
+            enabled: false,
+            formatter: function() {
+               var sY = Highcharts.numberFormat(this.y,1);
+               return sY;
+            },
+            color: 'black',
+         },
+         pointPadding: 0.1,
+         groupPadding: 0,
+         borderWidth: 0,
+         fillOpacity: 0.1,
+      },
+   },
+   title: {
+      text: 'Grösse der Personen',
+      align: 'left',
+      widthAdjust: 0,
+      x: 0,
+   },
+   subtitle: {
+      text: 'Kanton Luzern',
+      align: 'left',
+      x: 0,
+   },
+   xAxis: {
+      type: 'category',
+      uniqueNames: true,
+      reversed: false,
+      labels: {
+         overflow: 'allow',
+         rotation: -45,
+         step: 1,
+      },
+      tickInterval: 1,
+      tickmarkPlacement: 'on',
+      tickLength: 0,
+   },
+   yAxis: {
+      reversed: false,
+      reversedStacks: false,
+      title: {
+         align: 'high',
+         text: 'Höhe (inch)',
+      },
+      labels: {
+         overflow: 'allow',
+      },
+      tickInterval: 10,
+   },
+      data: {
+           csvURL: 'https://www.lustat.ch/files_ftp/daten/hcbartest9.csv',
+           itemDelimiter: ',',
+           firstRowAsNames: true,
+           startRow: 0,
+       },
+
+   legend: {
+      enabled: true,
+      reversed: false,
+      align: 'left',
+      layout: 'vertical',
+      floating: true,
+      x: -10,
+      y: 40,
+      symbolRadius: 0,
+      symbolHeight: 14,
+      itemStyle: {
+         fontWeight: 'normal',
+      },
+      labelFormatter: function() {
+          return this.name;
+      },
+   },
+   credits: {
+      enabled: true,
+      text: 'LUSTAT Statistik Luzern<br>Datenquelle: sashelp.class',
+      href: 'https://www.lustat.ch',
+      position: {
+         align: 'right',
+         verticalAlign: 'bottom',
+         x: -50,
+         y: -20,
+      },
+   },
+   exporting: {
+      enabled: true,
+      filename: 'hcbartest9',
+      sourceWidth: 750,
+      sourceHeight: 532,
+      buttons: {
+         contextButton: {
+            align: 'right',
+            x: 40,
+         },
+      },
+   },
+   tooltip: {
+      formatter: function() {
+         var sTooltipMarkup = false; // Do not show tooltip.
+         var sY;
+         var sZ;
+         var sYPrefix = '';
+         var sZPrefix = '';
+         var sCiLow;
+         var sCiHigh;
+         var iPos;
+         var sYEinh = '';
+         var sZEinh = '';
+         var sSeriesNameShort;
+         var sCircle = '<span style="color:' + this.point.color + '">\u25CF</span> ';
+         if (this.series.name.match (/(Vertrauensintervall)/)) {
+            if (this.point.tt != undefined) {
+               if (this.point.tt != false) {
+                  sTooltipMarkup = sCircle + this.point.tt;
+               }
+            }
+            else if (this.point.tt == undefined) {
+               sCiLow = Highcharts.numberFormat(this.point.low,1);
+               sCiHigh = Highcharts.numberFormat(this.point.high,1);
+               iPos = (this.series.name).indexOf(' (Vertrauensintervall)');
+               sSeriesNameShort=(this.series.name).substring(0,iPos);
+               if (sYPrefix != '') {sYPrefix= ', ' + sYPrefix};
+               sTooltipMarkup = sCircle + sSeriesNameShort;
+               sTooltipMarkup += '<br>' + this.key + sYPrefix + ' (Vertrauensintervall): ';
+               sTooltipMarkup += '<b>' + sCiLow + ' \u2013 ' + sCiHigh + ' ' + sYEinh + '</b>';
+            }
+         }
+         else if (! this.series.name.match (/(Vertrauensintervall)/)) {
+            if (this.point.tt != undefined) {
+               if (this.point.tt != false) {
+                  sTooltipMarkup = sCircle + this.point.tt;
+               }
+            }
+            else if (this.point.tt == undefined) {
+               if (sYPrefix != '') {sYPrefix= ', ' + sYPrefix};
+               sY = Highcharts.numberFormat(this.y,1);
+               sTooltipMarkup = sCircle + this.key + sYPrefix + ': <b>' + sY + ' ' + sYEinh + '</b>';
+            }
+         };
+         return sTooltipMarkup;
+      },
+   },
+   highchartsOptions: Highcharts.setOptions ({
+      colors: ['#406ab2','#878786'],
+      lang: {
+         decimalPoint: '.',
+         thousandsSep: ' ',
+         numericSymbols: null,
+         weekdays: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+         months: ['Januar', 'Februar', 'MÃ¤rz', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+         shortMonths: ['Jan', 'Feb', 'MÃ¤r', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
+         contextButtonTitle: 'Drucken, Download, Export',
+         downloadJPEG: 'Download JPEG Bild',
+         downloadPDF: 'Download PDF Dokument',
+         downloadPNG: 'Download PNG Bild',
+         downloadSVG: 'Download SVG Vektor Bild',
+         printChart: 'Bild drucken',
+      },
+   }),
+};
+   $('#hcbartest9').highcharts(json);
+});
+   </script>
+</head>
+<body>
+   <script src='https://www.lustat.ch/files/themes/lustat/js/highcharts.js'></script>
+   <script src='https://code.highcharts.com/modules/data.js'></script>
+   <script src='https://www.lustat.ch/files/themes/lustat/js/exporting.js'></script>
+   <script src='https://www.lustat.ch/files/themes/lustat/css/lustat_og.css'></script>
+   <div id='hcbartest9' style='max-width:750px; min-width: 300px ; margin: 1em auto;'></div>
+
+
+
+
+</body>
+</html>
